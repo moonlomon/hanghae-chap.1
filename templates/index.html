@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="나혼자 산탄다"/>
+    <meta property="og:description" content="혼자 산 타려니 막막한 혼산러, 등린이들 모여라! 등산 경험을 공유하고 유익한 정보도 얻어보세요!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='og_img.png') }}"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&family=Noto+Sans+KR:wght@100;400;500;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>나혼자 산탄다</title>
+    <script>
+        let posts = {{ posts|safe }};
+        let searchStatus = "{{ status }}";
+        let searchKeyword = "{{ keyword }}";
+        let searched = false
+
+        function getPost(img) {
+            let num = '';
+            // 클릭한 리스트의 pic 값과 같은 data의 인덱스 찾기
+            for (let i = 0; i < posts.length; i++) {
+                if (posts[i].pic === img) {
+                    num = i;
+                }
+            }
+            let post = posts[num]; // 클릭한 리스트에 해당하는 데이터
+            let modal = document.getElementById('modal-post');
+            // 모달 html 생성하고 데이터 넣기
+            let html_temp = `<div class="card">
+                                <p class="user"><i class="fa fa-solid fa-user"></i>${post.userID}</p>
+                                <div class="card-body">
+                                    <h5 class="card-title">${post.mountain} <span class="route">${post.route}</span></h5>
+                                    <div class="post_info">
+                                        <dl>
+                                            <dt>위치</dt>
+                                            <dd>${post.location}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>편의시설</dt>
+                                            <dd class="facilityArea"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>소감 및 기타 정보</dt>
+                                            <dd>${post.desc}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>`;
+            modal.querySelector('.post_area').innerHTML = html_temp; // 모달 안에 append
+            if (post.pic !== '') {
+                let img = document.createElement('img');
+                img.className = 'card-img-top';
+                img.setAttribute('alt', post.mountain);
+                img.setAttribute('src', '{{ url_for('static', filename='img/') }}' + post.pic);
+                modal.querySelector('.card').prepend(img);
+            }
+
+            for (var i = 0; i < post.fa.length; i++) { // 체크된 편의시설 불러와서 html 태그로 만들고 append
+                if (Number(Object.values(post.fa[i][0])) === 1) {
+                    let span = document.createElement('span');
+                    span.className = `badge badge-pill ${Object.values(post.fa[i][1]).join('')}`;
+                    span.innerText = Object.keys(post.fa[i][0]);
+                    modal.querySelector('.facilityArea').append(span);
+                }
+            }
+            modal.classList.add('is-active');
+        }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+
+        let searchVal = '';
+        function search() {
+            searchVal = document.getElementById('mountainName').value;
+            if (searchVal.trim().length <= 0) {
+                alert('검색어를 입력하세요.');
+                return;
+            }
+            searched = true;
+            window.location.href = `/login/home?searched=yes&keyword=${searchVal}`;
+        }
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <header id="header">
+        <h1 class="logo">
+            <span href="/login/home">나혼자<strong>산</strong>탄다</span>
+        </h1>
+        <ul class="btns">
+            <!-- 밑에는 사용자 아이디 불러올 수 있으면 추가.. -->
+            <li class="user"><p><strong>{{ user_id }}</strong>님, 환영합니다!</p></li>
+            <li>
+                <button type="button" class="btn btn-light btn-sm" onclick='window.location.href = "/login"'>로그인</button>
+            </li>
+            <li>
+                <button type="button" class="btn btn-outline-light btn-sm" onclick="sign_out()">로그아웃</button>
+            </li>
+            <!--<li>
+                <button type="button" class="btn btn-outline-light btn-sm">회원가입</button>
+            </li>-->
+        </ul>
+    </header>
+    <div id="container">
+        <div class="banner_area">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">나혼자 산탄다!</h1>
+                    <p class="lead">혼자 산 타려니 막막한 혼산러, 등린이들 모여라! 등산 경험을 공유하고 유익한 정보도 얻어보세요!</p>
+                </div>
+            </div>
+        </div>
+        <div class="contents">
+            <section class="search_area">
+                <div class="container">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="산 이름을 입력하세요." id="mountainName">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-lg" type="button" onclick="search()">검색</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="posts_area">
+                <div class="container">
+                    <!--                <div class="btn_area taR">-->
+                    <!--                    <button type="button" class="btn btn-secondary btn-lg"-->
+                    <!--                            onclick="$('#modal-post-write').addClass('is-active')">등록하기-->
+                    <!--                    </button>-->
+                    <!--                </div>-->
+                    <div class="btn_area taR {% if status == 'yes' %}btn_x2{% endif %}">
+                        {% if status == 'yes' %}
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="window.location.href = '/login/home'">전체 목록 보기</button>
+                        {% endif %}
+                        <button type="button" class="btn btn-secondary btn-lg col-2"
+                                onclick='window.location.href = "/register"'>등록하기
+                        </button>
+                        {# html파일을 연결하기 위해서 먼저 app.py에서 랜더링을 해야 하는건가? #}
+                    </div>
+                    <div class="pics_area">
+                        {% set count = [0] %}
+                        <div class="row">
+                            {% for post in posts|reverse %}
+                                {% if (status == 'no') or (status == 'yes' and keyword == post.mountain ) %}
+                                {% if count.append(count.pop() + 1) %}{% endif %}
+                                <div class="col-4">
+                                    <a href="javascript:" onclick="getPost('{{ post.pic }}')">
+                                        <div class="img_box">
+                                            {% if post.pic == '' %}
+                                                <img src="{{ url_for('static', filename='@thumb_default.png') }}"
+                                                     class="img-fluid" alt="{{ post.mountain }}">
+                                            {% else %}
+                                                <img src="{{ url_for('static', filename='img/') }}{{ post.pic }}"
+                                                     class="img-fluid" alt="{{ post.mountain }}">
+                                            {% endif %}
+                                            <div class="hover_area">
+                                                <div class="txt_box">
+                                                    <p class="mountain">{{ post.mountain }}</p>
+                                                    <p class="user"><strong>{{ post.userID }}</strong>님의 후기</p>
+                                                </div>
+                                                <ul class="labels">
+                                                    {% for arr, class in post.fa %}
+                                                        {% for text, show in arr.items() %}
+                                                            {% if show %}
+                                                                <li class="badge badge-pill {{ class }}">{{ text }}</li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% if count == [0] and status == 'yes' %}
+                            <p class="no_result">'{{ keyword }}' 검색 결과가 없습니다.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 리스트 상세 모달 -->
+    <div class="modal" id="modal-post">
+        <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="post_view">
+                    <div class="post_area">
+                        <!-- 리스트 클릭 시 데이터 불러오는 영역 -->
+                        <div class="card">
+                            <img src="https://youimg1.tripcdn.com/target/10040d0000006tj6eB5B8_C_760_506.jpg"
+                                 class="card-img-top" alt="...">
+                            <p class="user">사용자 id</p>
+                            <div class="card-body">
+                                <h5 class="card-title">관악산 <span class="route">사당 능선 코스</span></h5>
+                                <div class="post_info">
+                                    <dl>
+                                        <dt>위치</dt>
+                                        <dd>서울시 관악구</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>편의시설</dt>
+                                        <dd>
+                                            <span class="badge badge-pill badge-primary">비교적 깨끗한 화장실</span>
+                                            <span class="badge badge-pill badge-secondary">대피소</span>
+                                            <span class="badge badge-pill badge-success">대중교통</span>
+                                            <span class="badge badge-pill badge-danger">주차장</span>
+                                            <span class="badge badge-pill badge-warning">하산 후 먹거리</span>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>소감 및 기타 정보</dt>
+                                        <dd>관악산은 사람이 너무 많아서 9시 이후에 올라가면 연주대에 정상석 대기줄이 엄청 길어요. 빨리 올라가는걸 추천합니다.</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //리스트 클릭 시 데이터 불러오는 영역 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-post").removeClass("is-active")'></button>
+    </div>
+    <!-- //리스트 상세 모달 -->
+
+    <!-- 게시글 작성 모달 -->
+    <!--
+    <div class="modal" id="modal-post-write">
+        <div class="modal-background" onclick='$("#modal-post-write").removeClass("is-active")'></div>
+        <div class="modal-content">
+            <button class="modal-close is-large" aria-label="close"
+                    onclick='$("#modal-post-write").removeClass("is-active")'></button>
+            <div class="box">
+                <div class="form_area">
+                    <form>
+                        <div class="form-group">
+                            <p class="form_ttl">사진 등록</p>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">업로드할 사진을 선택하세요.</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mountain" class="form_ttl">산 이름</label>
+                            <input type="text" class="form-control" id="mountain">
+                        </div>
+                        <div class="form-group">
+                            <label for="hikingRoute" class="form_ttl">등산 코스명</label>
+                            <input type="text" class="form-control" id="hikingRoute">
+                        </div>
+                        <div class="form-group">
+                            <label for="location" class="form_ttl">지역명</label>
+                            <input type="text" class="form-control" id="location">
+                        </div>
+                        <div class="form-group">
+                            <p class="form_ttl">편의시설</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa1">
+                                <label class="form-check-label" for="fa1" data-class="class1">비교적 깨끗한 화장실</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa2">
+                                <label class="form-check-label" for="fa2">대피소</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa3">
+                                <label class="form-check-label" for="fa3">대중교통</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa4">
+                                <label class="form-check-label" for="fa4">주차장</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa5">
+                                <label class="form-check-label" for="fa5">하산 후 먹거리</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="etc" class="form_ttl">소감 및 기타 정보</label>
+                            <textarea type="text" class="form-control" id="etc"></textarea>
+                        </div>
+                        <div class="btn_area taC">
+                            <button type="submit" class="btn btn-outline-secondary btn-lg">취소</button>
+                            <button type="submit" class="btn btn-secondary btn-lg">저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+    <!-- //게시글 모달 -->
+</div>
+</body>
+</html>

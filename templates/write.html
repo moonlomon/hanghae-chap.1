@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="나혼자 산탄다"/>
+    <meta property="og:description" content="혼자 산 타려니 막막한 혼산러, 등린이들 모여라! 등산 경험을 공유하고 유익한 정보도 얻어보세요!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='og_img.png') }}"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&family=Noto+Sans+KR:wght@100;400;500;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+	<title>나혼자 산탄다</title>
+	<script>
+		$(document).ready(function () {
+			let file = document.querySelector('#customFile');
+			let input_filename = document.querySelector('#customFile2');
+			console.log(input_filename)
+			file.addEventListener('change', function (e) {
+				input_filename.innerHTML = e.target.files[0].name;
+			 })
+		})
+
+
+		function get_user_info() {
+			let pic = $(`#customFile`)[0].files[0]
+			let mountain = $(`#mountain`).val()
+			let route = $(`#hikingRoute`).val()
+			let loca = $(`#location`).val()
+			let facilities = [0, 0, 0, 0, 0]
+			let description = $(`#etc`).val()
+			for(let i = 0; i < facilities.length; i++) {
+				if($(`#fa0${i+1}`).is(':checked')){
+					facilities[i] = 1
+				}
+			}
+
+            if (pic === "" || mountain === ""){
+                        if(pic === ""){
+                            alert("사진을 등록해 주세요.")
+                            return
+                        }
+                        if(mountain === "") {
+                            alert("산이름을 등록해 주세요.")
+                            return
+                        }
+                        {#window.location.reload()#}
+                    }
+            else {
+                let form_data = new FormData()
+                form_data.append("file_give", pic)
+                form_data.append("mountain_give", mountain)
+                form_data.append("route_give", route)
+                form_data.append("location_give", loca)
+                form_data.append("facilities_give", facilities)   // facilities 의 경우 리스트 FormData() 형식의 경우 value 가 다 문자열로 저장된다.
+                form_data.append("description_give", description)
+
+                $.ajax({
+                    type: "POST",
+                    url: "/register/save",
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response["result"] === "success") {
+                            alert(response["msg"])
+                            window.location.href = "/login/home"
+                        }
+                    }
+                });
+            }
+		}
+	</script>
+</head>
+<body>
+<div class="wrap">
+    <header id="header">
+            <h1 class="logo">
+                <a href="/">나혼자<strong>산</strong>탄다</a>
+            </h1>
+            <ul class="btns">
+                <!-- 밑에는 사용자 아이디 불러올 수 있으면 추가.. -->
+                <li class="user"><p><strong>회원ID</strong>님, 환영합니다!</p></li>
+                <li>
+                    <button type="button" class="btn btn-light btn-sm">로그인</button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-outline-light btn-sm">로그아웃</button>
+                </li>
+<!--                <li>-->
+<!--                    <button type="button" class="btn btn-outline-light btn-sm">회원가입</button>-->
+<!--                </li>-->
+            </ul>
+        </header>
+    <div id="container">
+        <div class="banner_area">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">나혼자 산탄다!</h1>
+                <p class="lead">혼자 산 타려니 막막한 혼산러, 등린이들 모여라! 등산 경험을 공유하고 유익한 정보도 얻어보세요!</p>
+            </div>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="container">
+            <section>
+                <div class="form_area">
+                    <form>
+                        <div class="form-group">
+                            <p class="form_ttl">사진 등록</p>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile" id="customFile2">업로드할 사진을 선택하세요.</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mountain" class="form_ttl">산 이름</label>
+                            <input type="text" class="form-control" id="mountain">
+                        </div>
+                        <div class="form-group">
+                            <label for="hikingRoute" class="form_ttl">등산한 코스 이름</label>
+                            <input type="text" class="form-control" id="hikingRoute">
+                        </div>
+
+						<div class="form-group">
+							<label for="location" class="form_ttl">지역명</label>
+							<input type="text" class="form-control" id="location">
+						</div>
+<!--{#화장실 badge-primary 대피소 badge-secondary 대중교통 badge-success 주차장 badge-danger 하산 후 먹거리 badge-warning#}-->
+
+                        <div class="form-group">
+                            <p class="form_ttl">편의시설</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa01">
+                                <label label class="form-check-label" for="fa1" data-class="badge-primary">비교적 깨끗한 화장실</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa02">
+                                <label class="form-check-label" for="fa02" data-class="badge-secondary">대피소</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa03">
+                                <label class="form-check-label" for="fa03" data-class="badge-success">이용 가능한 대중교통</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa04">
+                                <label class="form-check-label" for="fa04" data-class="badge-danger">넓은 주차장</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fa05">
+                                <label class="form-check-label" for="fa05" data-class="badge-warning">하산 후 먹거리</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="etc" class="form_ttl">소감 및 기타 정보</label>
+                            <textarea type="text" class="form-control" id="etc"></textarea>
+                        </div>
+                        <div class="btn_area taC">
+                            <button type="button" class="btn btn-outline-secondary btn-lg col-2" onclick='window.location.href = "/"'>취소</button>
+                            <button type="button" class="btn btn-secondary btn-lg col-2" onclick='get_user_info()'>저장</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+</html>

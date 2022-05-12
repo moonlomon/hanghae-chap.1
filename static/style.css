@@ -1,0 +1,352 @@
+body {
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: normal;
+    min-height: 100vh;
+    letter-spacing: -0.02em;
+}
+.banner_area{
+    padding: 100px 0;
+    background: linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.6)), url(https://minio.nculture.org/amsweb-opt/multimedia_assets/244/85174/84669/c/003_%ED%95%9C%EB%9D%BC%EC%82%B0_%EC%98%81%EC%8B%A4%ED%83%90%EB%B0%A9%EB%A1%9C-%EA%B0%80%EC%9D%84-%EB%8B%A8%ED%92%8D_%ED%95%9C%EB%9D%BC%EC%82%B0%EA%B5%AD%EB%A6%BD%EA%B3%B5%EC%9B%90_%EC%A0%9C4%EC%9C%A0%ED%98%95-full-size.jpg);
+    background-size: cover;
+    background-position: center top 37%;
+    background-repeat: no-repeat;
+    color: #fff;
+    text-align: center;
+}
+.banner_area h1{
+    font-weight: 500;
+}
+.banner_area p{
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+.banner_area .jumbotron{
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.btn_area{
+    padding: 20px 0;
+}
+.btn_area .btn+.btn{
+    margin-left: 15px;
+}
+.btn_area.has_bt{
+    border-top: 1px solid #e8e8e8;
+    padding-top: 40px;
+    margin-top: 40px;
+}
+.btn_area.btn_x2{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.row{
+    border-radius: 10px;
+    overflow: hidden;
+}
+.row .img_box{
+    position: relative;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+}
+.row .img_box img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate3d(-50%, -50%, 0);
+    object-fit: cover;
+}
+.hover_area{
+    display: flex;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.5);
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: ease-out 200ms;
+}
+.row .img_box:hover .hover_area{
+    opacity: 1;
+}
+.hover_area{
+    padding: 0 40px;
+}
+.hover_area .txt_box p{
+    margin: 0;
+    color: #fff;
+    font-style: normal;
+}
+.hover_area .txt_box p.user{
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 8px;
+}
+.hover_area .txt_box p.user strong{
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    margin-top: -4px;
+}
+.hover_area .txt_box p.mountain{
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+}
+.hover_area .labels{
+    margin-bottom: 0;
+    margin-top: 20px;
+}
+.col-4:nth-child(n+4){
+    margin-top: 50px;
+}
+.pics_area{
+    border-top: 1px solid #e8e8e8;
+    padding-top: 40px;
+}
+.search_area{
+    padding: 60px 0;
+    background-color: #f4f4f4;
+}
+.search_area .input-group{
+    max-width: 700px;
+    margin: 0 auto!important;
+}
+.search_area+.btn_area{
+    margin-top: 40px;
+}
+section.posts_area{
+    padding-top: 0;
+}
+.posts_area .container > .btn_area{
+    padding: 40px 0;
+}
+.custom-file-input:lang(en)~.custom-file-label::after{
+    content: '사진 업로드';
+}
+.card-title{
+    font-size: 24px;
+    font-weight: 700;
+}
+.card-title .route{
+    display: inline-block;
+    font-size: 16px;
+    opacity: .8;
+    vertical-align: middle;
+    margin-bottom: 3px;
+    margin-left: 6px;
+}
+.card .user{
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: 0;
+    padding: 0 5px;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+}
+.card .user i{
+    display: inline-block;
+    margin-right: 4px;
+    margin-top: -2px;
+    font-weight: normal;
+    vertical-align: middle;
+    opacity: .5;
+}
+.card .facilityArea{
+    margin: -2px -4px;
+}
+.facilityArea .badge-pill{
+    margin: 2px 4px;
+}
+
+
+/* 공통 */
+a:-webkit-any-link {
+ text-decoration: none!important;
+}
+section{
+    padding: 60px 0;
+}
+.taC{
+    text-align: center;
+}
+.taL{
+    text-align: left!important;
+}
+.taR{
+    text-align: right!important;
+}
+.form-group{
+    padding: 30px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+}
+.form_ttl{
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+    letter-spacing: -0.03em;
+}
+.form-group+.form-group{
+    margin-top: 40px;
+}
+.form_area.login{
+    max-width: 500px;
+    padding: 30px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.form_area.login .form-group{
+    margin-bottom: 0;
+    background-color: transparent!important;
+    border-radius: 0;
+    padding: 10px 30px;
+}
+.form_area.login .form-group+.form-group{
+    margin-top: 0;
+}
+.form_area.login .btn_area{
+    padding: 20px 30px;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.form_area.login .help{
+    font-size: 14px;
+    line-height: 1.3;
+    margin: 6px 0 0;
+}
+.form_area.login .help.help-lg{
+    font-size: 18px;
+    color: #6c757d;
+    padding: 20px 15px 5px;
+}
+
+/*로그인*/
+.button.is-sparta {
+    background-color: #009740;
+    border-color: transparent;
+    color: #fff !important;
+}
+
+.button.is-sparta.is-outlined {
+    background-color: transparent;
+    border-color: #009740;
+    color: #009740 !important;
+}
+.help {
+    color: gray;
+}
+
+.modal-content {
+    width: 600px;
+    max-width: 80%;
+}
+
+input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.image img {
+    object-fit:cover;
+    width:100%;
+    height:100%;
+}
+a.btn:not([href]):not([tabindex]){
+    color: #fff;
+}
+.modal-content .modal-close{
+    right: -50px;
+}
+.wrap{
+    padding-top: 55px;
+}
+.wrap.register{
+    padding-top: 0;
+}
+.no_result{
+    font-size: 16px;
+    text-align: center;
+    padding: 40px;
+}
+
+
+/* Header */
+#header{
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px;
+    background-color: #6c757d;
+    margin-bottom: 0;
+    z-index: 2;
+    height: 55px;
+    box-sizing: border-box;
+}
+.logo{
+    margin-bottom: 0;
+}
+.logo span{
+    display: block;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 1;
+    font-weight: 400;
+}
+.logo strong{
+    color: #fff;
+}
+#header .btns{
+    font-size: 0;
+    margin-bottom: 0;
+}
+#header .btns li{
+    display: inline-block;
+    vertical-align: middle;
+}
+#header .btns li+li{
+    margin-left: 10px;
+}
+#header .user p{
+    font-size: 14px;
+    margin-bottom: 0;
+    color: #fff;
+}
+#header li.user+li{
+    margin-left: 20px;
+}
+#header .user strong{
+    color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+/* container */
+#container {
+    position: relative;
+    z-index: 1;
+}
